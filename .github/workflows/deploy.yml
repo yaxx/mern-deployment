@@ -2,12 +2,12 @@ name: Deploy to Production
 
 on:
   repository_dispatch:
-    types: [deploy]
+    types: [deploy-frontend, deploy-backend]
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: SSH into server and deploy
         uses: appleboy/ssh-action@v1.0.3
