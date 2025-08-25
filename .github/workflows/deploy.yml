@@ -16,7 +16,7 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SERVER_SSH_KEY }}
           script: |
-            cd /home/${{ secrets.SERVER_USER }}/stosyst
+            cd /var/www/mern-deployment
             git pull origin main
             echo "IMAGE=${{ github.event.client_payload.image }}" > .env
             docker compose -f docker-compose.prod.yml pull
