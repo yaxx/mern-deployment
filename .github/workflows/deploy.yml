@@ -17,8 +17,18 @@ jobs:
           key: ${{ secrets.SERVER_SSH_KEY }}
           script: |
             cd /var/www/mern-deployment
-            git pull origin main
-            echo "IMAGE=${{ github.event.client_payload.image }}" > .env
-            docker compose -f docker-compose.prod.yml pull
-            docker compose -f docker-compose.prod.yml up -d --remove-orphans
 
+            # Pull latest deployment repo changes
+            git pull origin main
+
+            # Update image reference from dispatched event
+            echo "IMAGE=${{ github.event.client_payload.image }}" > .env
+
+            # Authenticate with Docker Hub (needed for private client image)
+            echo ${{ secrets.DOCKERHUB_TOKEN }} | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
+
+            # Pull latest images
+            docker compose -f docker-compose.prod.yml pull
+
+            # Restart services
+            docker compose -f docker-compose.prod.yml up -d --remove-orphans
