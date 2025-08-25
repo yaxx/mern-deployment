@@ -2,7 +2,7 @@ name: Deploy to Production
 
 on:
   repository_dispatch:
-    types: [deploy-frontend, deploy-backend]
+    types: [deploy-client, deploy-server]
 
 jobs:
   deploy:
@@ -16,7 +16,9 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SERVER_SSH_KEY }}
           script: |
-            cd /var/www/mern-deployment
+            cd /home/${{ secrets.SERVER_USER }}/stosyst
+            git pull origin main
+            echo "IMAGE=${{ github.event.client_payload.image }}" > .env
             docker compose -f docker-compose.prod.yml pull
             docker compose -f docker-compose.prod.yml up -d --remove-orphans
 

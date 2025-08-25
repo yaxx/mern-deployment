@@ -1,9 +1,9 @@
 version: '3.9'
 
 services:
-  backend:
-    image: code2013/mern-backend:latest
-    container_name: mern-backend
+  api:
+    image: ${IMAGE}
+    container_name: stosyst-server
     restart: always
     env_file:
       - .backend.env
@@ -12,27 +12,29 @@ services:
     depends_on:
       - mongo
     networks:
-      - mern-network
+      - stosyst-network
 
-  frontend:
-    image: code2013/mern-frontend:latest
-    container_name: mern-frontend
+  client:
+    image: ${IMAGE}
+    container_name: stosyst-client
     restart: always
+    env_file:
+      - .client.env
     ports:
       - "80:80"
     networks:
-      - mern-network
+      - stosyst-network
 
   mongo:
     image: mongo:6.0
-    container_name: mern-mongo
+    container_name: stosyst-db
     restart: always
     volumes:
       - mongo_data:/data/db
     ports:
       - "27017:27017"
     networks:
-      - mern-network
+      - stosyst-network
 
 volumes:
   mongo_data:
